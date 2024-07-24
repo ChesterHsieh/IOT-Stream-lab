@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672" # RabbitMQ server
+      - "15672:15672" # Management interface
+    networks:
+      - flink_network
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+
+  flink-jobmanager:
+    image: flink:latest
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=flink-jobmanager
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    networks:
+      - flink_network
+    command: jobmanager
+
+  flink-taskmanager:
+    image: flink:latest
+    depends_on:
+      - flink-jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=flink-jobmanager
+    expose:
+      - "6121"
+      - "6122"
+    ports:
+      - "8082:8082"
+    networks:
+      - flink_network
+    command: taskmanager
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb-data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=yc
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
+    networks:
+      - flink_network
+
+  fake-data-generator:
+    image: chesterhsieh/streamming_lab:latest
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ../fake_data_generator:/app
+    command: python /app/generate_data.py
+    networks:
+      - flink_network
+
+volumes:
+  rabbitmq-data:
+
+networks:
+  flink_network:

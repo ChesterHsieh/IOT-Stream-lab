@@ -1,0 +1,14 @@
+# 使用官方 Python 執行環境作為基礎映像
+FROM python:3.9
+
+# 設定工作目錄
+WORKDIR /app
+
+# 將當前目錄的內容複製到工作目錄中
+COPY . /app
+
+# 安裝需要的 Python 庫
+RUN pip install --no-cache-dir pika Faker
+
+# 設定環境變數
+ENV PYTHONUNBUFFERED=1

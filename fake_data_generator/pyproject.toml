@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "streamming-lab"
+version = "0.1.0"
+description = ""
+authors = ["ChesterHsieh"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+faker = "^26.0.0"
+kafka-python = "^2.0.2"
+apache-flink = "^1.19.1"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
