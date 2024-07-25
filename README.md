@@ -11,7 +11,14 @@ cd docker && docker-compose up -d
 ```
 
 # Tasks need to pass
-
+- [ ] Basic ETL
+- [ ] Aggregation Analysis
+- [ ] Real-time Dashboard
+- [ ] Real-time Alerting
+- [ ] Price bidding
+- [ ] Real-time ML model
+---
+- [ ] Sensors failure recovery
 
 # Topic cover and some references books good to read.
 
